@@ -175,13 +175,6 @@ cd packages/examples/client-demo
 npm run test:payment
 ```
 
-## Next Steps
-
-- Read the [Protocol Specification](./protocol.md)
-- Explore [API Reference](./api.md)
-- Check out more [Examples](../packages/examples/README.md)
-- Deploy to production networks
-
 ## Troubleshooting
 
 ### Common Issues
