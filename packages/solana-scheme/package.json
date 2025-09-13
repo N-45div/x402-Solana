@@ -1,0 +1,28 @@
+{
+  "name": "@x402-solana/solana-scheme",
+  "version": "1.0.0",
+  "description": "Solana payment scheme implementation for x402 protocol",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@x402-solana/core": "^1.0.0",
+    "@solana/web3.js": "^1.91.0",
+    "@solana/spl-token": "^0.4.1",
+    "bs58": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.0.0",
+    "@types/bs58": "^4.0.0",
+    "jest": "^29.0.0",
+    "ts-jest": "^29.0.0",
+    "typescript": "^5.0.0"
+  },
+  "files": [
+    "dist"
+  ]
+}

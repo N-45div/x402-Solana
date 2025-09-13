@@ -1,0 +1,118 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.requestLogger = requestLogger;
+exports.errorHandler = errorHandler;
+exports.rateLimit = rateLimit;
+exports.validateX402Request = validateX402Request;
+/**
+ * Request logging middleware
+ */
+function requestLogger(logger) {
+    return (req, res, next) => {
+        const start = Date.now();
+        res.on('finish', () => {
+            const duration = Date.now() - start;
+            logger.info('HTTP Request', {
+                method: req.method,
+                url: req.url,
+                statusCode: res.statusCode,
+                duration: `${duration}ms`,
+                userAgent: req.get('User-Agent'),
+                ip: req.ip
+            });
+        });
+        next();
+    };
+}
+/**
+ * Error handling middleware
+ */
+function errorHandler(logger) {
+    return (error, req, res, next) => {
+        logger.error('Unhandled error:', {
+            error: error.message,
+            stack: error.stack,
+            method: req.method,
+            url: req.url,
+            body: req.body
+        });
+        if (res.headersSent) {
+            return next(error);
+        }
+        res.status(500).json({
+            error: 'Internal server error',
+            message: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
+    };
+}
+/**
+ * Rate limiting middleware (basic implementation)
+ */
+function rateLimit(windowMs = 15 * 60 * 1000, maxRequests = 100) {
+    const requests = new Map();
+    return (req, res, next) => {
+        const clientId = req.ip || 'unknown';
+        const now = Date.now();
+        const windowStart = now - windowMs;
+        // Clean up old entries
+        for (const [key, value] of requests.entries()) {
+            if (value.resetTime < windowStart) {
+                requests.delete(key);
+            }
+        }
+        // Get or create client record
+        let clientRecord = requests.get(clientId);
+        if (!clientRecord || clientRecord.resetTime < windowStart) {
+            clientRecord = { count: 0, resetTime: now + windowMs };
+            requests.set(clientId, clientRecord);
+        }
+        // Check rate limit
+        if (clientRecord.count >= maxRequests) {
+            return res.status(429).json({
+                error: 'Too many requests',
+                retryAfter: Math.ceil((clientRecord.resetTime - now) / 1000)
+            });
+        }
+        // Increment counter
+        clientRecord.count++;
+        // Add rate limit headers
+        res.set({
+            'X-RateLimit-Limit': maxRequests.toString(),
+            'X-RateLimit-Remaining': (maxRequests - clientRecord.count).toString(),
+            'X-RateLimit-Reset': new Date(clientRecord.resetTime).toISOString()
+        });
+        next();
+    };
+}
+/**
+ * Validation middleware for x402 requests
+ */
+function validateX402Request(req, res, next) {
+    const { x402Version, paymentHeader, paymentRequirements } = req.body;
+    if (typeof x402Version !== 'number') {
+        return res.status(400).json({
+            error: 'Invalid x402Version: must be a number'
+        });
+    }
+    if (typeof paymentHeader !== 'string' || !paymentHeader.trim()) {
+        return res.status(400).json({
+            error: 'Invalid paymentHeader: must be a non-empty string'
+        });
+    }
+    if (!paymentRequirements || typeof paymentRequirements !== 'object') {
+        return res.status(400).json({
+            error: 'Invalid paymentRequirements: must be an object'
+        });
+    }
+    // Validate payment requirements structure
+    const required = ['scheme', 'network', 'maxAmountRequired', 'payTo', 'asset'];
+    for (const field of required) {
+        if (!paymentRequirements[field]) {
+            return res.status(400).json({
+                error: `Missing required field in paymentRequirements: ${field}`
+            });
+        }
+    }
+    next();
+}
+//# sourceMappingURL=middleware.js.map

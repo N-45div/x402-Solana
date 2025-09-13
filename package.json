@@ -1,0 +1,54 @@
+{
+  "name": "x402-solana",
+  "version": "1.0.0",
+  "description": "x402 HTTP payment protocol implementation for Solana blockchain",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm run build:packages",
+    "build:packages": "npm run build:core && npm run build:solana-scheme && npm run build:facilitator && npm run build:client-sdk && npm run build:examples",
+    "build:core": "cd packages/core && npm run build",
+    "build:solana-scheme": "cd packages/solana-scheme && npm run build",
+    "build:facilitator": "cd packages/facilitator && npm run build",
+    "build:client-sdk": "cd packages/client-sdk && npm run build",
+    "build:examples": "cd packages/examples/resource-server && npm run build && cd ../client-demo && npm run build",
+    "test": "npm run test:packages",
+    "test:packages": "cd packages/core && npm test && cd ../solana-scheme && npm test && cd ../facilitator && npm test && cd ../client-sdk && npm test",
+    "start:facilitator": "cd packages/facilitator && npm start",
+    "start:example": "cd packages/examples/resource-server && npm start",
+    "test:payment": "cd packages/examples/client-demo && npm run test:payment",
+    "lint": "eslint . --ext .ts,.js",
+    "format": "prettier --write ."
+  },
+  "workspaces": [
+    "packages/*",
+    "packages/examples/*"
+  ],
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint": "^8.57.0",
+    "lerna": "^8.0.0",
+    "prettier": "^3.2.0",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "@coral-xyz/anchor": "^0.30.1",
+    "@solana/web3.js": "^1.91.0",
+    "@solana/spl-token": "^0.4.1"
+  },
+  "keywords": [
+    "x402",
+    "solana",
+    "payments",
+    "http",
+    "blockchain",
+    "spl-token"
+  ],
+  "author": "x402-Solana Contributors",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/x402-solana.git"
+  }
+}

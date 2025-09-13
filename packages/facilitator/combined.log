@@ -1,0 +1,8 @@
+{"level":"info","message":"Initialized Solana payment schemes for all networks","timestamp":"2025-09-13T13:57:41.417Z"}
+{"level":"info","message":"x402 Solana Facilitator Server running on port 3000","timestamp":"2025-09-13T13:57:41.423Z"}
+{"level":"info","message":"Supported endpoints:","timestamp":"2025-09-13T13:57:41.424Z"}
+{"level":"info","message":"  GET  /health - Health check","timestamp":"2025-09-13T13:57:41.424Z"}
+{"level":"info","message":"  GET  /supported - Get supported schemes","timestamp":"2025-09-13T13:57:41.424Z"}
+{"level":"info","message":"  POST /verify - Verify payment","timestamp":"2025-09-13T13:57:41.424Z"}
+{"level":"info","message":"  POST /settle - Settle payment","timestamp":"2025-09-13T13:57:41.425Z"}
+{"level":"info","message":"  GET  /transaction/:signature - Get transaction status","timestamp":"2025-09-13T13:57:41.425Z"}
