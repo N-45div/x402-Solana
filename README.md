@@ -16,13 +16,11 @@ The x402 protocol is an HTTP-based payment standard that enables services to cha
 
 ## Architecture
 
-```
-┌─────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   Client    │───▶│ Resource Server  │───▶│   Facilitator   │
-│             │    │                  │    │     Server      │
-│ (Web/Agent) │◀───│  (Your API)      │◀───│   (Solana)      │
-└─────────────┘    └──────────────────┘    └─────────────────┘
-```
+flowchart LR
+  C[Client\n(Web/Agent)] --> R[Resource Server\n(Your API)]
+  R --> F[Facilitator Server\n(Solana)]
+  F --> R
+  R --> C
 
 ## Project Structure
 
@@ -50,7 +48,7 @@ x402-Solana/
 ### Installation
 
 ```bash
-git clone <your-repo>
+git clone https://github.com/N-45div/x402-Solana
 cd x402-Solana
 npm install
 # one-shot setup (installs + builds)
@@ -131,20 +129,6 @@ npm run test:payment
 ### Transaction Optimization
 - Batched operations for efficiency
 - Priority fee handling for fast confirmation
-
-## Getting Started
-
-Start with the Quick Start, then follow the full runbook:
-
-- [Quick Start Guide](./docs/quickstart.md)
-- [How to Run (step-by-step)](./HOW-TO-RUN.md)
-
-## Documentation
-
-- [Protocol Specification](./docs/protocol.md)
-- [Solana Scheme Details](./docs/solana-scheme.md)
-- [API Reference](./docs/api.md)
-- [Examples](./examples/README.md)
 
 ## Troubleshooting
 
